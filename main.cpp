@@ -17,6 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include "GenStack.h"
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -55,7 +56,18 @@ int main(int argc, char* argv[])
 
   while(process)
   {
-    ifstream inputFile(fileName);
+    ifstream inputFile;
+    struct stat buffer;
+    if(stat(fileName.c_str(), &buffer) == 0)
+    {
+      inputFile.open(fileName);
+    }
+    else
+    {
+      cout << "File does not exist" << endl;
+      return 0;
+    }
+
     string line;
     int lineCount = 0;
 
@@ -225,10 +237,15 @@ int main(int argc, char* argv[])
       cin >> input;
       if(input == "N" || input == "n")
         process = false;
-      else
+      else if(input == "Y" || input == "y")
       {
         cout << "Please enter the name of your next file: ";
         cin >> fileName;
+      }
+      else
+      {
+        cout << "Not a valid input. Goodbye." << endl;
+        return 0;
       }
     }
   }
